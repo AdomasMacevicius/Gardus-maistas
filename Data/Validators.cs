@@ -46,3 +46,23 @@ public class UpdateMenuDtoValidator : AbstractValidator<UpdateMenuDto>
         RuleFor(dto => dto.Type).NotNull().NotEmpty().Length(min: 2, max: 25);
     }
 }
+
+public class CreateMealDtoValidator : AbstractValidator<CreateMealDto>
+{
+    public CreateMealDtoValidator()
+    {
+        RuleFor(dto => dto.Name).NotNull().NotEmpty().Length(min: 2, max: 25);
+        RuleFor(dto => dto.Description).NotNull().NotEmpty().Length(min: 10, max: 200);
+        RuleFor(dto => dto.Price).NotNull().NotEmpty().GreaterThan(0.00f);
+    }
+}
+
+public class UpdateMealDtoValidator : AbstractValidator<UpdateMealDto>
+{
+    public UpdateMealDtoValidator()
+    {
+        RuleFor(dto => dto.Name).NotNull().NotEmpty().Length(min: 2, max: 25);
+        RuleFor(dto => dto.Description).NotNull().NotEmpty().Length(min: 10, max: 200);
+        RuleFor(dto => dto.Price).NotNull().NotEmpty().GreaterThan(0.00f);
+    }
+}
