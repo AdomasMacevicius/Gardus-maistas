@@ -30,3 +30,19 @@ public class UpdateRestaurantDtoValidator : AbstractValidator<UpdateRestaurantDt
         // PriceRating - Dropdown list
     }
 }
+
+public class CreateMenuDtoValidator : AbstractValidator<CreateMenuDto>
+{
+    public CreateMenuDtoValidator()
+    {
+        RuleFor(dto => dto.Type).NotNull().NotEmpty().Length(min: 2, max: 25);
+    }
+}
+
+public class UpdateMenuDtoValidator : AbstractValidator<UpdateMenuDto>
+{
+    public UpdateMenuDtoValidator()
+    {
+        RuleFor(dto => dto.Type).NotNull().NotEmpty().Length(min: 2, max: 25);
+    }
+}
