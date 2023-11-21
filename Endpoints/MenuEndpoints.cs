@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using O9d.AspNet.FluentValidation;
 using Data;
 using Data.Entities;
+using Auth.Entities;
 
 namespace Endpoints;
 
@@ -40,8 +44,8 @@ public static class MenuEndpoints
             return Results.Ok(new MenuDto(menu.Type));
         });
 
-        menusGroup.MapPost("menus", async (SiteDbContext siteDbContext, [Validate] CreateMenuDto createMenuDto,
-            int restaurantId) =>
+        menusGroup.MapPost("menus", [Authorize(Roles = Roles.Admin)] async (SiteDbContext siteDbContext,
+            HttpContext httpContext, [Validate] CreateMenuDto createMenuDto, int restaurantId) =>
         {
             Restaurant? restaurant = await siteDbContext.Restaurants
                 .FirstOrDefaultAsync(restaurant => restaurant.Id == restaurantId);
@@ -51,10 +55,16 @@ public static class MenuEndpoints
                 return Results.NotFound();
             }
 
+            if (!httpContext.User.IsInRole(Roles.Admin))
+            {
+                return Results.Forbid();
+            }
+
             Menu menu = new()
             {
                 Type = createMenuDto.Type,
-                Restaurant = restaurant
+                Restaurant = restaurant,
+                UserId = httpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub)
             };
 
             siteDbContext.Menus.Add(menu);
@@ -65,8 +75,8 @@ public static class MenuEndpoints
                 menu.Restaurant));
         });
 
-        menusGroup.MapPut("menus/{menuId}", async (SiteDbContext siteDbContext, int restaurantId, int menuId,
-            [Validate] UpdateMenuDto updateMenuDto) =>
+        menusGroup.MapPut("menus/{menuId}", [Authorize(Roles = Roles.Admin)] async (SiteDbContext siteDbContext,
+            HttpContext httpContext, int restaurantId, int menuId, [Validate] UpdateMenuDto updateMenuDto) =>
         {
             Restaurant? restaurant = await siteDbContext.Restaurants
                 .FirstOrDefaultAsync(restaurant => restaurant.Id == restaurantId);
@@ -76,6 +86,11 @@ public static class MenuEndpoints
             if (restaurant == null || menu == null)
             {
                 return Results.NotFound();
+            }
+
+            if (!httpContext.User.IsInRole(Roles.Admin))
+            {
+                return Results.Forbid();
             }
 
             menu.Type = updateMenuDto.Type;
@@ -87,7 +102,8 @@ public static class MenuEndpoints
             return Results.Ok(new UpdateMenuDto(menu.Type));
         });
 
-        menusGroup.MapDelete("menus/{menuId}", async (SiteDbContext siteDbContext, int restaurantId, int menuId) =>
+        menusGroup.MapDelete("menus/{menuId}", [Authorize(Roles = Roles.Admin)] async (SiteDbContext siteDbContext,
+            HttpContext httpContext, int restaurantId, int menuId) =>
         {
             Restaurant? restaurant = await siteDbContext.Restaurants
                 .FirstOrDefaultAsync(restaurant => restaurant.Id == restaurantId);
@@ -97,6 +113,11 @@ public static class MenuEndpoints
             if (restaurant == null || menu == null)
             {
                 return Results.NotFound();
+            }
+
+            if (!httpContext.User.IsInRole(Roles.Admin))
+            {
+                return Results.Forbid();
             }
 
             siteDbContext.Remove(menu);

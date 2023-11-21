@@ -1,3 +1,5 @@
+using Auth.Entities;
+
 namespace Data.Entities;
 
 public class Menu
@@ -6,6 +8,8 @@ public class Menu
     public required string Type { get; set; }
 
     public required Restaurant Restaurant { get; set; }
+    public required string UserId { get; set; }
+    public User? User { get; set; }
 }
 
 public record MenuDto(string Type);

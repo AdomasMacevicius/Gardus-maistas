@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Data.Entities;
+using Auth.Entities;
 
 namespace Data;
 
-public class SiteDbContext : DbContext
+public class SiteDbContext : IdentityDbContext<User>
 {
     IConfiguration configuration;
     public DbSet<Restaurant> Restaurants { get; set; }
