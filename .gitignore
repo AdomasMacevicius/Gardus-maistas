@@ -1,6 +1,4 @@
 bin
 obj
 Migrations
-Properties
-*.json
-*.csproj
+*.sln
