@@ -29,7 +29,15 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]));
 });
 builder.Services.AddAuthorization();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+    });
+});
 var app = builder.Build();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -46,7 +54,6 @@ AuthEndpoints.AddAuthApi(app);
 
 using var scope = app.Services.CreateScope();
 var dbSeeder = scope.ServiceProvider.GetRequiredService<AuthDbSeeder>();
-
 await dbSeeder.SeedAsync();
 
 app.Run();
