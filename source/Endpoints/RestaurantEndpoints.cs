@@ -17,7 +17,7 @@ public static class RestaurantEndpoints
             CancellationToken cancellationToken) =>
         {
             return (await siteDbContext.Restaurants.ToListAsync(cancellationToken))
-                .Select(dto => new RestaurantDto(dto.Name, dto.CuisineType, dto.City, dto.PriceRating));
+                .Select(dto => new CreateRestaurantDto(dto.Id, dto.Name, dto.Description, dto.CuisineType, dto.City, dto.Address, dto.PhoneNumber, dto.PriceRating));
         });
 
         restaurantsGroup.MapGet("restaurants/{restaurantId}", async (SiteDbContext siteDbContext, int restaurantId) =>
@@ -34,7 +34,7 @@ public static class RestaurantEndpoints
                 restaurant.PriceRating));
         });
 
-        restaurantsGroup.MapPost("restaurants", [Authorize(Roles = Roles.Admin)] async (SiteDbContext siteDbContext,
+        restaurantsGroup.MapPost("restaurants", async (SiteDbContext siteDbContext,
             HttpContext httpContext, [Validate] CreateRestaurantDto createRestaurantDto) =>
         {
             var restaurants = siteDbContext.Restaurants.ToList()
@@ -45,10 +45,10 @@ public static class RestaurantEndpoints
                 return Results.Conflict();
             }
 
-            if (!httpContext.User.IsInRole(Roles.Admin))
-            {
-                return Results.Forbid();
-            }
+            // if (!httpContext.User.IsInRole(Roles.Admin))
+            // {
+            //     return Results.Forbid();
+            // }
 
             Restaurant restaurant = new()
             {
@@ -71,8 +71,7 @@ public static class RestaurantEndpoints
                 restaurant.PhoneNumber, restaurant.PriceRating));
         });
 
-        restaurantsGroup.MapPut("restaurants/{restaurantId}", [Authorize(Roles = Roles.Admin)] async
-            (SiteDbContext siteDbContext, HttpContext httpContext, int restaurantId,
+        restaurantsGroup.MapPut("restaurants/{restaurantId}", async (SiteDbContext siteDbContext, HttpContext httpContext, int restaurantId,
             [Validate] UpdateRestaurantDto updateRestaurantDto) =>
         {
             Restaurant? restaurant = await siteDbContext.Restaurants
@@ -83,10 +82,10 @@ public static class RestaurantEndpoints
                 return Results.NotFound();
             }
 
-            if (!httpContext.User.IsInRole(Roles.Admin))
-            {
-                return Results.Forbid();
-            }
+            // if (!httpContext.User.IsInRole(Roles.Admin))
+            // {
+            //     return Results.Forbid();
+            // }
 
             restaurant.Name = updateRestaurantDto.Name;
             restaurant.Description = updateRestaurantDto.Description;
@@ -104,8 +103,7 @@ public static class RestaurantEndpoints
                 restaurant.City, restaurant.Address, restaurant.PhoneNumber, restaurant.PriceRating));
         });
 
-        restaurantsGroup.MapDelete("restaurants/{restaurantId}", [Authorize(Roles = Roles.Admin)] async
-            (SiteDbContext siteDbContext, HttpContext httpContext, int restaurantId) =>
+        restaurantsGroup.MapDelete("restaurants/{restaurantId}", async (SiteDbContext siteDbContext, HttpContext httpContext, int restaurantId) =>
         {
             Restaurant? restaurant = await siteDbContext.Restaurants
                 .FirstOrDefaultAsync(restaurant => restaurant.Id == restaurantId);
@@ -115,10 +113,10 @@ public static class RestaurantEndpoints
                 return Results.NotFound();
             }
 
-            if (!httpContext.User.IsInRole(Roles.Admin))
-            {
-                return Results.Forbid();
-            }
+            // if (!httpContext.User.IsInRole(Roles.Admin))
+            // {
+            //     return Results.Forbid();
+            // }
 
             siteDbContext.Remove(restaurant);
 

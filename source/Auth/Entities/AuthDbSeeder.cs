@@ -44,7 +44,7 @@ public class AuthDbSeeder
 
         if (existingAdminUser == null)
         {
-            var createNewAdminUser = await userManager.CreateAsync(newAdminUser, "Kebabas1-");
+            var createNewAdminUser = await userManager.CreateAsync(newAdminUser, "Kebabaisuces490!");
 
             if (createNewAdminUser.Succeeded)
             {

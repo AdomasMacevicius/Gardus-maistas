@@ -1,0 +1,17 @@
+.Logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.CustomText {
+  font-weight: bold;
+}
+
+.CustomButton {
+  border-radius: 0;
+  border: 0;
+}
+
+.CustomButton:focus {
+  background-color: white;
+}

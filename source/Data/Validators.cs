@@ -9,11 +9,11 @@ public class CreateRestaurantDtoValidator : AbstractValidator<CreateRestaurantDt
     {
         RuleFor(dto => dto.Name).NotNull().NotEmpty().Length(min: 2, max: 25);
         RuleFor(dto => dto.Description).NotNull().NotEmpty().Length(min: 10, max: 200);
-        // CuisineType - Dropdown list
+        RuleFor(dto => dto.CuisineType).NotNull().NotEmpty().Length(min: 2, max: 25);
         RuleFor(dto => dto.City).NotNull().NotEmpty().Length(min: 3, max: 25);
         RuleFor(dto => dto.Address).NotNull().NotEmpty().Length(min: 6, max: 35);
         RuleFor(dto => dto.PhoneNumber).NotNull().NotEmpty().Length(min: 12, max: 12);
-        // PriceRating - Dropdown list
+        RuleFor(dto => dto.PriceRating).NotNull().NotEmpty().Length(min: 1, max: 4);
     }
 }
 
@@ -23,11 +23,11 @@ public class UpdateRestaurantDtoValidator : AbstractValidator<UpdateRestaurantDt
     {
         RuleFor(dto => dto.Name).NotNull().NotEmpty().Length(min: 2, max: 25);
         RuleFor(dto => dto.Description).NotNull().NotEmpty().Length(min: 10, max: 200);
-        // CuisineType - Dropdown list
+        RuleFor(dto => dto.CuisineType).NotNull().NotEmpty().Length(min: 2, max: 25);
         RuleFor(dto => dto.City).NotNull().NotEmpty().Length(min: 3, max: 25);
         RuleFor(dto => dto.Address).NotNull().NotEmpty().Length(min: 6, max: 35);
         RuleFor(dto => dto.PhoneNumber).NotNull().NotEmpty().Length(min: 12, max: 12);
-        // PriceRating - Dropdown list
+        RuleFor(dto => dto.PriceRating).NotNull().NotEmpty().Length(min: 1, max: 4);
     }
 }
 
