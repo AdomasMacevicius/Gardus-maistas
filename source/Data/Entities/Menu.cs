@@ -8,7 +8,7 @@ public class Menu
     public required string Type { get; set; }
 
     public required Restaurant Restaurant { get; set; }
-    public required string UserId { get; set; }
+    public string? UserId { get; set; }
     public User? User { get; set; }
 }
 
