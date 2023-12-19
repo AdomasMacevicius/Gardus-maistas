@@ -10,7 +10,7 @@ public class Meal
     public required float Price { get; set; }
 
     public required Menu Menu { get; set; }
-    public required string UserId { get; set; }
+    public string? UserId { get; set; }
     public User? User { get; set; }
 }
 

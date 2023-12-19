@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import '../App.css';
 import Modal from './modal/Modal';
+import MealsModal from './modal/MealsModal';
 import RestaurantUpdateForm from './RestaurantUpdateForm';
 import MenuCreateForm from './MenuCreateForm';
 import MenuUpdateForm from './MenuUpdateForm';
+import MealCreateForm from './MealCreateForm';
 
 export default function RestaurantForm(props) {
     const [showRestaurantUpdateForm, setShowRestaurantUpdateForm] = useState(null);
     const [showMenuCreateForm, setShowMenuCreateForm] = useState(false);
     const [showMenuUpdateForm, setShowMenuUpdateForm] = useState(null);
+    const [showMealCreateForm, setShowMealCreateForm] = useState(false);
     const [menus, setMenus] = useState([]);
+    const [menu, setMenu] = useState(null);
 
     function DeleteRestaurant(restaurantId) {
         const url = 'http://localhost:5095/api/restaurants/' + restaurantId;
@@ -18,18 +22,6 @@ export default function RestaurantForm(props) {
             method: 'DELETE'
         })
             .then(onRestaurantDeleted())
-            .catch(error => {
-                console.log(error)
-            });
-    }
-
-    function DeleteMenu(menuId) {
-        const url = 'http://localhost:5095/api/restaurants/' + props.restaurant.id + '/menus/' + menuId;
-
-        fetch(url, {
-            method: 'DELETE'
-        })
-            .then(onMenuDeleted())
             .catch(error => {
                 console.log(error)
             });
@@ -50,6 +42,18 @@ export default function RestaurantForm(props) {
             });
     }
 
+    function DeleteMenu(menuId) {
+        const url = 'http://localhost:5095/api/restaurants/' + props.restaurant.id + '/menus/' + menuId;
+
+        fetch(url, {
+            method: 'DELETE'
+        })
+            .then(onMenuDeleted())
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
     useEffect(() => {
         GetMenus()
     }, []);
@@ -57,7 +61,7 @@ export default function RestaurantForm(props) {
     return (
         <div>
             <div>
-                {(showRestaurantUpdateForm === null && showMenuCreateForm === false && showMenuUpdateForm === null) && (
+                {(showRestaurantUpdateForm === null && showMenuCreateForm === false && showMenuUpdateForm === null && showMealCreateForm === false) && (
                     <div>
                         <div className="d-flex justify-content-start">
                             <h1><b><i>{props.restaurant.name}</i></b></h1>
@@ -83,13 +87,15 @@ export default function RestaurantForm(props) {
                     </div>
                 )}
 
-                {(menus.length > 0 && showMenuCreateForm === false && showRestaurantUpdateForm === null && showMenuUpdateForm === null) && RenderMenusTable()}
+                {(menus.length > 0 && showMenuCreateForm === false && showRestaurantUpdateForm === null && showMenuUpdateForm === null && showMealCreateForm === false) && RenderMenusTable()}
 
                 {showRestaurantUpdateForm !== null && <RestaurantUpdateForm restaurant={showRestaurantUpdateForm} onRestaurantUpdated={onRestaurantUpdated} />}
 
                 {showMenuCreateForm && <MenuCreateForm restaurant={props.restaurant} onMenuCreated={onMenuCreated} />}
 
                 {showMenuUpdateForm !== null && <MenuUpdateForm restaurant={props.restaurant} menu={showMenuUpdateForm} onMenuUpdated={onMenuUpdated} />}
+
+                {showMealCreateForm && <MealCreateForm restaurant={props.restaurant} menu={menu} onMealCreated={onMealCreated} />}
             </div>
         </div>
     );
@@ -102,13 +108,16 @@ export default function RestaurantForm(props) {
                         {menus.map(menu => (
                             <tr>
                                 <td className="w-50">
-                                    <h3>{menu.type}</h3>
+                                    <MealsModal restaurant={props.restaurant} menu={menu} />
                                 </td>
-                                <td className="w-25 px-5">
+                                <td className="w-0 px-0">
                                     <button onClick={() => setShowMenuUpdateForm(menu)} className="btn btn-success">Redaguoti meniu</button>
                                 </td>
-                                <td>
+                                <td className="w-0 px-2">
                                     <button onClick={() => { if (window.confirm(`Ar tikrai norite pašalinti meniu "${menu.type}"?`)) DeleteMenu(menu.id) }} className="btn btn-danger">Pašalinti meniu</button>
+                                </td>
+                                <td>
+                                    <button onClick={() => { setShowMealCreateForm(true); setMenu(menu) }} className="btn btn-success">Pridėti patiekalą</button>
                                 </td>
                             </tr>
                         ))}
@@ -206,5 +215,30 @@ export default function RestaurantForm(props) {
         alert(`Pašalinimas sėkmingas.`);
 
         GetMenus();
+    }
+
+    function onMealCreated(code, createdMeal) {
+        let errorsString = "";
+
+        if (code === 422) {
+            if (createdMeal.Name !== "") {
+                errorsString += createdMeal.Name + "\n";
+            }
+            if (createdMeal.Description !== "") {
+                errorsString += createdMeal.Description + "\n";
+            }
+            if (createdMeal.Price !== "") {
+                errorsString += createdMeal.Price + "\n";
+            }
+
+            if (errorsString !== "") {
+                alert(`${errorsString}`)
+            }
+        }
+        else {
+            setShowMealCreateForm(false);
+
+            alert(`Patiekalas buvo sukurtas. Po patvirtinimo, "${createdMeal.Name}" bus patiekalų sąraše.`);
+        }
     }
 }

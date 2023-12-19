@@ -30,8 +30,31 @@ body {
   border: 0;
 }
 
+.CustomMenuButton {
+  background: #6a85b6;
+
+  background: -webkit-linear-gradient(to right, rgba(106, 133, 182, 0.5), rgba(186, 200, 224, 0.5));
+
+  background: linear-gradient(to right, rgba(106, 133, 182, 0.5), rgba(186, 200, 224, 0.5));
+  border-radius: 5px;
+  border-style: solid;
+}
+
+.CustomMenuButton:focus {
+  opacity: 0.5;
+}
+
 .CustomButton:focus {
   background-color: white;
+}
+
+.CustomTable {
+  border: solid;
+  column-width: 500px;
+}
+
+.CustomTableText {
+  text-align: justify;
 }
 
 .CustomGradient {
