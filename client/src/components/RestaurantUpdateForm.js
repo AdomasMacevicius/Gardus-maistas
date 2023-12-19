@@ -31,7 +31,7 @@ export default function RestaurantUpdateForm(props) {
             City: formData.city,
             Address: formData.address,
             PhoneNumber: formData.phoneNumber,
-            PriceRating: formData.priceRating
+            PriceRating: (typeof formData.priceRating === 'undefined') ? "€" : formData.priceRating
         };
 
         const url = 'http://localhost:5095/api/restaurants/' + props.restaurant.id;
@@ -52,16 +52,15 @@ export default function RestaurantUpdateForm(props) {
                         CuisineType: (typeof responseFromSource.errors.CuisineType === 'undefined') ? "" : responseFromSource.errors.CuisineType[0],
                         City: (typeof responseFromSource.errors.City === 'undefined') ? "" : responseFromSource.errors.City[0],
                         Address: (typeof responseFromSource.errors.Address === 'undefined') ? "" : responseFromSource.errors.Address[0],
-                        PhoneNumber: (typeof responseFromSource.errors.PhoneNumber === 'undefined') ? "" : responseFromSource.errors.PhoneNumber[0],
-                        PriceRating: (typeof responseFromSource.errors.PriceRating === 'undefined') ? "" : responseFromSource.errors.PriceRating[0]
+                        PhoneNumber: (typeof responseFromSource.errors.PhoneNumber === 'undefined') ? "" : responseFromSource.errors.PhoneNumber[0]
                     };
                     props.onRestaurantUpdated(422, errors);
                 }
                 else {
-                    props.onRestaurantUpdated(201, restaurantToUpdate);
+                    props.onRestaurantUpdated(200, restaurantToUpdate);
                 }
             })
-            .catch((error) => {
+            .catch(error => {
                 console.log(error);
             });
     };
@@ -69,7 +68,7 @@ export default function RestaurantUpdateForm(props) {
     return (
         <div>
             <div>
-                <h1>Redaguoti kavinę: "{props.restaurant.name}"</h1>
+                <h1>Redaguoti kavinę: <b><i>{props.restaurant.name}</i></b></h1>
             </div>
 
             <div className="mt-4">
@@ -104,7 +103,13 @@ export default function RestaurantUpdateForm(props) {
 
             <div className="mt-3">
                 <label className="h5 form-label">Kainų įvertinimas</label>
-                <input value={formData.priceRating} name="priceRating" type="text" className="form-control w-25" onChange={handleChange} />
+                <select name="priceRating" className="form-control w-25" onChange={handleChange}>
+                    <option value="" selected disabled hidden>{props.restaurant.priceRating}</option>
+                    <option value={"€"}>€</option>
+                    <option value={"€€"}>€€</option>
+                    <option value={"€€€"}>€€€</option>
+                    <option value={"€€€€"}>€€€€</option>
+                </select>
             </div>
 
             <button onClick={handleSubmit} className="btn btn-dark btn-md mt-3">Atnaujinti kavinę</button>

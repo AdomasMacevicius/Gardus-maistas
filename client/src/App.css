@@ -1,10 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 .Logo {
-  height: 40vmin;
+  height: 50px;
   pointer-events: none;
 }
 
+.Image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+  height: 500px;
+}
+
+.Header {
+  color: white;
+}
+
 .CustomText {
-  font-weight: bold;
+  font-size: 20px;
 }
 
 .CustomButton {
@@ -14,4 +32,12 @@
 
 .CustomButton:focus {
   background-color: white;
+}
+
+.CustomGradient {
+  background: #6a85b6;
+
+  background: -webkit-linear-gradient(to right, rgba(106, 133, 182, 0.5), rgba(186, 200, 224, 0.5));
+
+  background: linear-gradient(to right, rgba(106, 133, 182, 0.5), rgba(186, 200, 224, 0.5));
 }

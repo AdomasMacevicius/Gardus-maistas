@@ -13,7 +13,6 @@ public class CreateRestaurantDtoValidator : AbstractValidator<CreateRestaurantDt
         RuleFor(dto => dto.City).NotNull().NotEmpty().Length(min: 3, max: 25);
         RuleFor(dto => dto.Address).NotNull().NotEmpty().Length(min: 6, max: 35);
         RuleFor(dto => dto.PhoneNumber).NotNull().NotEmpty().Length(min: 12, max: 12);
-        RuleFor(dto => dto.PriceRating).NotNull().NotEmpty().Length(min: 1, max: 4);
     }
 }
 
@@ -27,7 +26,6 @@ public class UpdateRestaurantDtoValidator : AbstractValidator<UpdateRestaurantDt
         RuleFor(dto => dto.City).NotNull().NotEmpty().Length(min: 3, max: 25);
         RuleFor(dto => dto.Address).NotNull().NotEmpty().Length(min: 6, max: 35);
         RuleFor(dto => dto.PhoneNumber).NotNull().NotEmpty().Length(min: 12, max: 12);
-        RuleFor(dto => dto.PriceRating).NotNull().NotEmpty().Length(min: 1, max: 4);
     }
 }
 

@@ -21,7 +21,7 @@ export default function RestaurantCreateForm(props) {
             City: formData.city,
             Address: formData.address,
             PhoneNumber: formData.phoneNumber,
-            PriceRating: formData.priceRating
+            PriceRating: (typeof formData.priceRating === 'undefined') ? "€" : formData.priceRating
         };
 
         const url = 'http://localhost:5095/api/restaurants';
@@ -42,8 +42,7 @@ export default function RestaurantCreateForm(props) {
                         CuisineType: (typeof responseFromSource.errors.CuisineType === 'undefined') ? "" : responseFromSource.errors.CuisineType[0],
                         City: (typeof responseFromSource.errors.City === 'undefined') ? "" : responseFromSource.errors.City[0],
                         Address: (typeof responseFromSource.errors.Address === 'undefined') ? "" : responseFromSource.errors.Address[0],
-                        PhoneNumber: (typeof responseFromSource.errors.PhoneNumber === 'undefined') ? "" : responseFromSource.errors.PhoneNumber[0],
-                        PriceRating: (typeof responseFromSource.errors.PriceRating === 'undefined') ? "" : responseFromSource.errors.PriceRating[0]
+                        PhoneNumber: (typeof responseFromSource.errors.PhoneNumber === 'undefined') ? "" : responseFromSource.errors.PhoneNumber[0]
                     };
                     props.onRestaurantCreated(422, errors);
                 }
@@ -51,7 +50,7 @@ export default function RestaurantCreateForm(props) {
                     props.onRestaurantCreated(201, restaurantToCreate);
                 }
             })
-            .catch((error) => {
+            .catch(error => {
                 console.log(error);
             });
     };
@@ -94,10 +93,15 @@ export default function RestaurantCreateForm(props) {
 
             <div className="mt-3">
                 <label className="h5 form-label">Kainų įvertinimas</label>
-                <input value={formData.priceRating} name="priceRating" type="text" className="form-control w-25" placeholder="Įveskite informaciją" onChange={handleChange} />
+                <select name="priceRating" className="form-control w-25" onChange={handleChange}>
+                    <option value={"€"}>€</option>
+                    <option value={"€€"}>€€</option>
+                    <option value={"€€€"}>€€€</option>
+                    <option value={"€€€€"}>€€€€</option>
+                </select>
             </div>
 
             <button onClick={handleSubmit} className="btn btn-dark btn-md mt-3">Pridėti kavinę</button>
-        </div >
+        </div>
     );
 }
